@@ -1,27 +1,21 @@
 package cn.lili.common.enums;
 
-
 import cn.lili.common.vo.ResultMessage;
 
 /**
  * 返回结果工具类
  *
- * @author lili
+ * @author sfy
  */
 public class ResultUtil<T> {
-
-    /**
-     * 抽象类，存放结果
-     */
     private final ResultMessage<T> resultMessage;
     /**
-     * 正常响应
+     * 正常响应默认状态码
      */
     private static final Integer SUCCESS = 200;
 
-
     /**
-     * 构造话方法，给响应结果默认值
+     * 构造ResultMessage，设置部分默认变量
      */
     public ResultUtil() {
         resultMessage = new ResultMessage<>();
@@ -31,7 +25,7 @@ public class ResultUtil<T> {
     }
 
     /**
-     * 返回数据
+     * 设置传递的数据
      *
      * @param t 范型
      * @return 消息
@@ -41,9 +35,19 @@ public class ResultUtil<T> {
         return this.resultMessage;
     }
 
+    /**
+     * 获得完整的ResultMessage对象
+     *
+     * @param t   范型
+     * @param <T> 范型
+     * @return 消息
+     */
+    public static <T> ResultMessage<T> data(T t) {
+        return new ResultUtil<T>().setData(t);
+    }
 
     /**
-     * 返回成功消息
+     * 设置成功返回的状态码和消息
      *
      * @param resultCode 返回码
      * @return 返回成功消息
@@ -57,16 +61,6 @@ public class ResultUtil<T> {
     }
 
     /**
-     * 抽象静态方法，返回结果集
-     * @param t 范型
-     * @param <T>  范型
-     * @return 消息
-     */
-    public static <T> ResultMessage<T> data(T t) {
-        return new ResultUtil<T>().setData(t);
-    }
-
-    /**
      * 返回成功
      *
      * @param resultCode 返回状态码
@@ -77,11 +71,39 @@ public class ResultUtil<T> {
     }
 
     /**
-     * 返回成功
+     * 返回成功，成功的方法是唯一的
+     *
      * @return 消息
      */
     public static <T> ResultMessage<T> success() {
         return new ResultUtil<T>().setSuccessMsg(ResultCode.SUCCESS);
+    }
+
+    /**
+     * 设置失败返回的状态码和消息
+     *
+     * @param resultCode 返回码
+     * @return 消息
+     */
+    public ResultMessage<T> setErrorMsg(ResultCode resultCode) {
+        this.resultMessage.setSuccess(false);
+        this.resultMessage.setMessage(resultCode.message());
+        this.resultMessage.setCode(resultCode.code());
+        return this.resultMessage;
+    }
+
+    /**
+     * 自定义设置失败返回的状态码和消息
+     *
+     * @param code 状态码
+     * @param msg  返回消息
+     * @return 消息
+     */
+    public ResultMessage<T> setErrorMsg(Integer code, String msg) {
+        this.resultMessage.setSuccess(false);
+        this.resultMessage.setMessage(msg);
+        this.resultMessage.setCode(code);
+        return this.resultMessage;
     }
 
     /**
@@ -95,7 +117,7 @@ public class ResultUtil<T> {
     }
 
     /**
-     * 返回失败
+     * 返回失败，自定义新的状态码和消息
      *
      * @param code 状态码
      * @param msg  返回消息
@@ -104,31 +126,4 @@ public class ResultUtil<T> {
     public static <T> ResultMessage<T> error(Integer code, String msg) {
         return new ResultUtil<T>().setErrorMsg(code, msg);
     }
-
-    /**
-     * 服务器异常 追加状态码
-     * @param resultCode 返回码
-     * @return 消息
-     */
-    public ResultMessage<T> setErrorMsg(ResultCode resultCode) {
-        this.resultMessage.setSuccess(false);
-        this.resultMessage.setMessage(resultCode.message());
-        this.resultMessage.setCode(resultCode.code());
-        return this.resultMessage;
-    }
-
-    /**
-     * 服务器异常 追加状态码
-     *
-     * @param code 状态码
-     * @param msg  返回消息
-     * @return 消息
-     */
-    public ResultMessage<T> setErrorMsg(Integer code, String msg) {
-        this.resultMessage.setSuccess(false);
-        this.resultMessage.setMessage(msg);
-        this.resultMessage.setCode(code);
-        return this.resultMessage;
-    }
-
 }
