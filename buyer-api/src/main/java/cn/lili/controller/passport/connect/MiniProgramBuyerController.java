@@ -48,6 +48,8 @@ public class MiniProgramBuyerController {
     @ApiOperation(value = "新小程序自动登录")
     public ResultMessage<Token> newAutoLogin(@RequestHeader String uuid, WechatMPLoginParams params) {
         params.setUuid(uuid);
+        System.out.println(uuid);
+        System.out.println(params);
         return ResultUtil.data(this.connectService.newMiniProgramAutoLogin(params));
     }
 

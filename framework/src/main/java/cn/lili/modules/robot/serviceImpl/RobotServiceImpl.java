@@ -134,19 +134,17 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     private SmsUtil smsUtil;
     @Transactional
     public void registerHandler(Robot member) {
+        // 数据库中的id字段！！！
         member.setId(SnowFlake.getIdStr());
-        //保存会员
         this.save(member);
-
         // 发送会员注册信息
         applicationEventPublisher.publishEvent(new TransactionCommitSendMQEvent("new member register", rocketmqCustomProperties.getMemberTopic(), MemberTagsEnum.MEMBER_REGISTER.name(), member));
     }
     @Override
     @Transactional
     public Robot addMember(RobotAddDTO memberAddDTO) {
-        Robot robot = new Robot(memberAddDTO.getNickName(), memberAddDTO.getUsername(), new BCryptPasswordEncoder().encode(memberAddDTO.getPassword()), memberAddDTO.getMobile(), memberAddDTO.getTenantIds());
+        Robot robot = new Robot(memberAddDTO.getNickName());
         registerHandler(robot);
-        memberTenantService.updateMemberTenantStatusByManager(robot.getId(), Collections.singletonList(memberAddDTO.getTenantIds()));
         return robot;
     }
 

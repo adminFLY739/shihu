@@ -239,21 +239,27 @@ public class ConnectServiceImpl extends ServiceImpl<ConnectMapper, Connect> impl
         if (cacheData == null) {
             // 如果缓存中没有相应信息，调用 getConnect 方法获取微信联合登陆信息
             JSONObject json = this.getConnect(params.getCode(),params.getAppid());
+            System.out.println("json:" + json);
 
             // 从返回的结果中获取 session_key、unionid 和 openid
             String sessionKey = json.getStr("session_key");
             String unionId = json.getStr("unionid");
             String openId = json.getStr("openid");
+            System.out.println("sessionKey:"+sessionKey);
+            System.out.println("unionId:"+unionId);
+            System.out.println("openId:"+openId);
 
             // 将获取到的信息存入 map 中，并将其存储到缓存中
             map.put("sessionKey", sessionKey);
             map.put("unionId", unionId);
             map.put("openId", openId);
+            System.out.println(map);
             // 缓存十五分钟（即十五分钟内免登录）
             cache.put(CachePrefix.WECHAT_SESSION_PARAMS.getPrefix() + params.getUuid(), map, 900L);
         } else {
             // 如果缓存中存在相应信息，直接将其转换成 map
             map = (Map<String, String>) cacheData;
+            System.out.println(map);
         }
 
         return autoLogin(params, map.get("openId"), map.get("unionId"),params.getAppid());
