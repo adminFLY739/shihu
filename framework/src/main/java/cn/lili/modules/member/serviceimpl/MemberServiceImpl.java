@@ -266,24 +266,34 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     public Token usernameStoreLogin(String username, String password) {
 
         Member member = this.findMember(username);
+        System.out.println("membermembermember" + member);
         //判断用户是否存在
         if (member == null || !member.getDisabled()) {
+            System.out.println("用户不存在");
             throw new ServiceException(ResultCode.USER_NOT_EXIST);
         }
         //判断密码是否输入正确
         if (!new BCryptPasswordEncoder().matches(password, member.getPassword())) {
+            System.out.println("密码不正确");
             throw new ServiceException(ResultCode.USER_PASSWORD_ERROR);
         }
         //对店铺状态的判定处理
         if (Boolean.TRUE.equals(member.getHaveStore())) {
+            System.out.println("用户有店铺");
+            System.out.println("storeidstoreidstoreid" + member.getStoreId());
             Store store = storeService.getById(member.getStoreId());
+            System.out.println("storestorestore" + store);
             List<StoreTenant> storeTenants = storeTenantService.getStoreTenantByStatus(store.getId(), StoreStatusEnum.OPEN.name());
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
             if (storeTenants.size() < 1) {
+                System.out.println("店铺关闭");
                 throw new ServiceException(ResultCode.STORE_CLOSE_ERROR);
             }
         } else {
+            System.out.println("用户没有店铺");
             throw new ServiceException(ResultCode.USER_NOT_EXIST);
         }
+        System.out.println("membermembermember" + member);
 
         return storeTokenGenerate.createToken(member, false);
     }
@@ -297,6 +307,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private Member findMember(String userName) {
         QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", userName).or().eq("mobile", userName);
+        System.out.println(this.getOne(queryWrapper));
         return this.getOne(queryWrapper);
     }
 

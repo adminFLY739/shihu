@@ -223,6 +223,7 @@ public class ClerkServiceImpl extends ServiceImpl<ClerkMapper, Clerk> implements
 
     @Override
     public Clerk getClerkByMemberId(String memberId) {
+        System.out.println("memberIdmemberIdmemberId" + memberId);
         return this.getOne(new QueryWrapper<Clerk>().eq("member_id", memberId));
     }
 

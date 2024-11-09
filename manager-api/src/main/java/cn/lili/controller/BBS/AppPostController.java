@@ -40,7 +40,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = "用户端——帖子")
 @RestController
-@RequestMapping("buyer/bbs/post")
+@RequestMapping("manager/bbs/post")
 public class AppPostController {
 
     @Autowired
@@ -216,7 +216,6 @@ public class AppPostController {
     @PostMapping("/addComment")
     @ApiOperation("添加评论")
     public R addComment(@RequestBody AddCommentForm request) {
-        System.out.println("requestrequestrequest" + request);
         AuthUser authUser = UserContext.getCurrentUser();
         if (authUser == null) {
             throw new ServiceException(ResultCode.USER_NOT_LOGIN);
@@ -241,13 +240,13 @@ public class AppPostController {
 
     @PostMapping("/addPost")
     @ApiOperation("发帖子")
-    public R addPost(@RequestBody AddPostForm request) {
-        AuthUser authUser = UserContext.getCurrentUser();
-        if (authUser == null) {
-            throw new ServiceException(ResultCode.USER_NOT_LOGIN);
-        }
-        ValidatorUtils.validateEntity(request);
-        Integer id = postService.addPost(request, authUser.getId());
+    public R addPost(@RequestBody AddManagerPostForm request) {
+//        AuthUser authUser = UserContext.getCurrentUser();
+//        if (authUser == null) {
+//            throw new ServiceException(ResultCode.USER_NOT_LOGIN);
+//        }
+//        ValidatorUtils.validateEntity(request);
+        Integer id = postService.addManagerPost(request);
         if (id == 0) {
             return R.error("发帖失败");
         }

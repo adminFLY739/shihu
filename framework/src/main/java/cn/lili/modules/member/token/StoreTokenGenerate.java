@@ -51,8 +51,11 @@ public class StoreTokenGenerate extends AbstractTokenGenerate<Member> {
         if (Boolean.FALSE.equals(member.getHaveStore())) {
             throw new ServiceException(ResultCode.STORE_NOT_OPEN);
         }
+        System.out.println("这小子有店" + member.getHaveStore());
         //根据会员id查询店员信息
+        System.out.println("这小子id是" + member.getId());
         Clerk clerk = clerkService.getClerkByMemberId(member.getId());
+        System.out.println("clerkclerkclerk" + clerk);
 
         if (clerk == null) {
             throw new ServiceException(ResultCode.CLERK_NOT_FOUND_ERROR);

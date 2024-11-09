@@ -19,7 +19,6 @@ import cn.lili.common.exception.ServiceException;
 import cn.lili.common.security.AuthUser;
 import cn.lili.common.security.context.UserContext;
 import cn.lili.modules.BBS.entity.*;
-import cn.lili.modules.BBS.entity.vo.CollectMessageResponse;
 import cn.lili.modules.BBS.entity.vo.PostDetailResponse;
 import cn.lili.modules.BBS.entity.vo.PostListResponse;
 import cn.lili.modules.BBS.mapper.PostDao;
@@ -27,22 +26,21 @@ import cn.lili.modules.BBS.param.*;
 import cn.lili.modules.BBS.service.*;
 import cn.lili.modules.BBS.utils.*;
 import cn.lili.modules.member.entity.dos.Member;
-import cn.lili.modules.member.entity.enums.PointTypeEnum;
 import cn.lili.modules.member.service.MemberService;
+import cn.lili.modules.robot.entity.dos.Robot;
+import cn.lili.modules.robot.serviceImpl.RobotServiceImpl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.vdurmont.emoji.EmojiParser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -75,6 +73,8 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
 
     @Resource
     private CommentMessageService commentMessageService;
+    @Autowired
+    private RobotServiceImpl robotServiceImpl;
 
 
     @Override
@@ -241,6 +241,29 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
 
         // AppUserEntity userInfo = appUserService.getById(post.getUid());
         Member userInfo = memberService.getById(post.getUid());
+        if (userInfo == null) {
+            userInfo = new Member();
+            Robot robotInfo = robotServiceImpl.getById(response.getUid());
+            userInfo.setUsername(robotInfo.getUsername());
+            userInfo.setStudentId(robotInfo.getStudentId());
+            userInfo.setNickName(robotInfo.getNickName());
+            userInfo.setSex(robotInfo.getSex());
+            userInfo.setBirthday(robotInfo.getBirthday());
+            userInfo.setRegionId(robotInfo.getRegionId());
+            userInfo.setRegion(robotInfo.getRegion());
+            userInfo.setMobile(robotInfo.getMobile());
+            userInfo.setPoint(robotInfo.getPoint());
+            userInfo.setTotalPoint(robotInfo.getTotalPoint());
+            userInfo.setFace(robotInfo.getFace());
+            userInfo.setDisabled(robotInfo.getDisabled());
+            userInfo.setHaveStore(robotInfo.getHaveStore());
+            userInfo.setStoreId(robotInfo.getStoreId());
+            userInfo.setClientEnum(robotInfo.getClientEnum());
+            userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+            userInfo.setGradeId(robotInfo.getGradeId());
+            userInfo.setExperience(robotInfo.getExperience());
+            userInfo.setTenantIds(robotInfo.getTenantIds());
+        }
         // 封装用户信息
         response.setUserInfo(userInfo);
 
@@ -307,13 +330,16 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
         commentEntity.setUid(uid);
 
         commentService.save(commentEntity);
+        System.out.println("commentEntitycommentEntitycommentEntity" + commentEntity);
 
         // 创建评论消息(后续判断评论的是否为自己的帖子，如果是则不创建消息)
         CommentMessageEntity commentMessageEntity = new CommentMessageEntity();
         commentMessageEntity.setIsRead(Boolean.FALSE);
-        commentMessageEntity.setReceiverUid(request.getReceiverUid());
-        commentMessageEntity.setCommentId(commentEntity.getId());
-        commentMessageService.save(commentMessageEntity);
+        if (request.getReceiverUid() != null) {
+            commentMessageEntity.setReceiverUid(request.getReceiverUid());
+            commentMessageEntity.setCommentId(commentEntity.getId());
+            commentMessageService.save(commentMessageEntity);
+        }
 
 
 
@@ -344,6 +370,17 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
             return post.getId();
         }
         return 0;
+    }
+
+    @Override
+    public Integer addManagerPost(AddManagerPostForm request) {
+        PostEntity post = new PostEntity();
+        BeanUtils.copyProperties(request, post);
+        post.setMedia(JSON.toJSONString(request.getMedia()));
+        post.setCut(JSON.toJSONString(request.getCut()));
+        post.setCreateTime(DateUtil.nowDateTime());
+        this.save(post);
+        return post.getId();
     }
 
     @Override
@@ -482,6 +519,29 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
             response.setCommentCount(commentService.getCountByTopicId(response.getId()));
             // 设置用户信息
             Member userInfo = memberService.getById(response.getUid());
+            if (userInfo == null) {
+                userInfo = new Member();
+                Robot robotInfo = robotServiceImpl.getById(response.getUid());
+                userInfo.setUsername(robotInfo.getUsername());
+                userInfo.setStudentId(robotInfo.getStudentId());
+                userInfo.setNickName(robotInfo.getNickName());
+                userInfo.setSex(robotInfo.getSex());
+                userInfo.setBirthday(robotInfo.getBirthday());
+                userInfo.setRegionId(robotInfo.getRegionId());
+                userInfo.setRegion(robotInfo.getRegion());
+                userInfo.setMobile(robotInfo.getMobile());
+                userInfo.setPoint(robotInfo.getPoint());
+                userInfo.setTotalPoint(robotInfo.getTotalPoint());
+                userInfo.setFace(robotInfo.getFace());
+                userInfo.setDisabled(robotInfo.getDisabled());
+                userInfo.setHaveStore(robotInfo.getHaveStore());
+                userInfo.setStoreId(robotInfo.getStoreId());
+                userInfo.setClientEnum(robotInfo.getClientEnum());
+                userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+                userInfo.setGradeId(robotInfo.getGradeId());
+                userInfo.setExperience(robotInfo.getExperience());
+                userInfo.setTenantIds(robotInfo.getTenantIds());
+            }
             response.setUserInfo(userInfo);
             response.setLevel(getUserLevel(userInfo.getTotalPoint()));
 
@@ -553,6 +613,31 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
                 response.setCommentCount(commentService.getCountByTopicId(response.getId()));
                 // 设置用户信息
                 Member userInfo = memberService.getById(response.getUid());
+                System.out.println("useruseruser" + userInfo);
+                if (userInfo == null) {
+                    userInfo = new Member();
+                    Robot robotInfo = robotServiceImpl.getById(response.getUid());
+                    userInfo.setUsername(robotInfo.getUsername());
+                    userInfo.setStudentId(robotInfo.getStudentId());
+                    userInfo.setNickName(robotInfo.getNickName());
+                    userInfo.setSex(robotInfo.getSex());
+                    userInfo.setBirthday(robotInfo.getBirthday());
+                    userInfo.setRegionId(robotInfo.getRegionId());
+                    userInfo.setRegion(robotInfo.getRegion());
+                    userInfo.setMobile(robotInfo.getMobile());
+                    userInfo.setPoint(robotInfo.getPoint());
+                    userInfo.setTotalPoint(robotInfo.getTotalPoint());
+                    userInfo.setFace(robotInfo.getFace());
+                    userInfo.setDisabled(robotInfo.getDisabled());
+                    userInfo.setHaveStore(robotInfo.getHaveStore());
+                    userInfo.setStoreId(robotInfo.getStoreId());
+                    userInfo.setClientEnum(robotInfo.getClientEnum());
+                    userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+                    userInfo.setGradeId(robotInfo.getGradeId());
+                    userInfo.setExperience(robotInfo.getExperience());
+                    userInfo.setTenantIds(robotInfo.getTenantIds());
+                    System.out.println("robotrobotrobot" + userInfo);
+                }
                 response.setUserInfo(userInfo);
                 // 设置用户等级
                 response.setLevel(getUserLevel(userInfo.getTotalPoint()));

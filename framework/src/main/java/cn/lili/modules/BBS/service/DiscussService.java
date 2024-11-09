@@ -17,6 +17,7 @@ public interface DiscussService extends IService<DiscussEntity> {
     DiscussDetailResponse detail(Integer id,String uid);
 
     Long addDiscuss(AddDiscussForm addDiscussForm, String uid);
+    Long addManagerDiscuss(AddManagerDiscussForm addDiscussForm);
 
     Long updateDiscuss(AddDiscussForm updateDiscussForm, String uid);
 

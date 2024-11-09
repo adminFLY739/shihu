@@ -15,7 +15,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Data
 @TableName("lf_robot")
@@ -98,24 +101,16 @@ public class Robot extends BaseEntity {
     @ApiModelProperty(value = "租户id")
     private String tenantIds;
 
-
-//    public Robot(String username, String password, String mobile) {
-//        this.username = username;
-//        this.password = password;
-//        this.mobile = mobile;
-//        this.nickName = "临时昵称";
-//        this.disabled = false;//未审核状态
-//        this.haveStore = false;
-//        this.sex = 0;
-//        this.point = 0L;
-//        this.totalPoint = 0L;
-//        this.lastLoginDate = new Date();
-//    }
-
-    public Robot(String nickName, String username, String password, String mobile, String tenantIds) {
-        this.username = username;
-        this.password = password;
-        this.mobile = mobile;
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+    public static String generateUserId() {
+        String timestamp = LocalDateTime.now().format(FORMATTER);
+        int randomNum = ThreadLocalRandom.current().nextInt(100000, 1000000);
+        return timestamp + randomNum;
+    }
+    public Robot(String nickName) {
+        this.username = generateUserId();
+        this.password = "111111";
         this.nickName = nickName;
         this.disabled = false;//未审核状态
         this.haveStore = false;
@@ -123,34 +118,6 @@ public class Robot extends BaseEntity {
         this.point = 0L;
         this.totalPoint = 0L;
         this.lastLoginDate = new Date();
-        this.tenantIds = tenantIds;
-    }
-
-//    public Robot(String username, String password, String mobile, String nickName, String face) {
-//        this.username = username;
-//        this.password = password;
-//        this.mobile = mobile;
-//        this.nickName = nickName;
-//        this.disabled = false;//未审核状态
-//        this.haveStore = false;
-//        this.face = face;
-//        this.sex = 0;
-//        this.point = 0L;
-//        this.totalPoint = 0L;
-//        this.lastLoginDate = new Date();
-//    }
-
-    public Robot(String username, String password, String face, String nickName, Integer sex) {
-        this.username = username;
-        this.password = password;
-        this.mobile = "";
-        this.nickName = nickName;
-        this.disabled = false;//未审核状态
-        this.haveStore = false;
-        this.face = face;
-        this.sex = sex;
-        this.point = 0L;
-        this.totalPoint = 0L;
-        this.lastLoginDate = new Date();
+        this.face = "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     }
 }

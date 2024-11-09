@@ -67,5 +67,6 @@ public interface PostService extends IService<PostEntity> {
 
     Integer getPostCountByDiscussId(Integer id);
 
+    Integer addManagerPost(AddManagerPostForm request);
 }
 

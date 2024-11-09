@@ -30,6 +30,8 @@ import cn.lili.modules.BBS.utils.DateUtil;
 import cn.lili.modules.member.entity.dos.Member;
 import cn.lili.modules.member.entity.enums.PointTypeEnum;
 import cn.lili.modules.member.service.MemberService;
+import cn.lili.modules.robot.entity.dos.Robot;
+import cn.lili.modules.robot.serviceImpl.RobotServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -69,6 +71,8 @@ public class AppUserServiceImpl extends ServiceImpl<AppUserDao, AppUserEntity> i
     private FollowMessageService followMessageService;
     @Resource
     private TaskUserService taskUserService;
+    @Autowired
+    private RobotServiceImpl robotServiceImpl;
 
 //    @Autowired
 //    private SystemService systemService;
@@ -316,6 +320,30 @@ public class AppUserServiceImpl extends ServiceImpl<AppUserDao, AppUserEntity> i
     @Override
     public AppUserInfoResponse findUserInfoById(String uid) {
        Member member = memberService.getById(uid);
+       if (member == null) {
+           member = new Member();
+           Robot robotInfo = robotServiceImpl.getById(uid);
+           member.setId(robotInfo.getId());
+           member.setUsername(robotInfo.getUsername());
+           member.setStudentId(robotInfo.getStudentId());
+           member.setNickName(robotInfo.getNickName());
+           member.setSex(robotInfo.getSex());
+           member.setBirthday(robotInfo.getBirthday());
+           member.setRegionId(robotInfo.getRegionId());
+           member.setRegion(robotInfo.getRegion());
+           member.setMobile(robotInfo.getMobile());
+           member.setPoint(robotInfo.getPoint());
+           member.setTotalPoint(robotInfo.getTotalPoint());
+           member.setFace(robotInfo.getFace());
+           member.setDisabled(robotInfo.getDisabled());
+           member.setHaveStore(robotInfo.getHaveStore());
+           member.setStoreId(robotInfo.getStoreId());
+           member.setClientEnum(robotInfo.getClientEnum());
+           member.setLastLoginDate(robotInfo.getLastLoginDate());
+           member.setGradeId(robotInfo.getGradeId());
+           member.setExperience(robotInfo.getExperience());
+           member.setTenantIds(robotInfo.getTenantIds());
+       }
         if(ObjectUtil.isNull(member)){
             throw new LinfengException("用户不存在");
         }

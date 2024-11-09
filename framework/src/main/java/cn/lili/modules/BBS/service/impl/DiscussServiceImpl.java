@@ -13,10 +13,7 @@ import cn.lili.modules.BBS.entity.vo.PostListResponse;
 import cn.lili.modules.BBS.mapper.DiscussDao;
 import cn.lili.modules.BBS.mapper.FollowDiscussDao;
 import cn.lili.modules.BBS.mapper.PostDao;
-import cn.lili.modules.BBS.param.AddCommentDiscussForm;
-import cn.lili.modules.BBS.param.AddDiscussForm;
-import cn.lili.modules.BBS.param.AddFollowDiscussForm;
-import cn.lili.modules.BBS.param.DelCommentDiscussForm;
+import cn.lili.modules.BBS.param.*;
 import cn.lili.modules.BBS.service.*;
 import cn.lili.modules.BBS.utils.AppPageUtils;
 import cn.lili.modules.BBS.utils.DateUtil;
@@ -214,6 +211,21 @@ public class DiscussServiceImpl extends ServiceImpl<DiscussDao, DiscussEntity> i
         discuss.setReadCount(0);
         discuss.setCut(JSON.toJSONString(addDiscussForm.getCut()));
         discuss.setUid(uid);
+        discuss.setCreateTime(DateUtil.nowDateTime());
+        if (this.save(discuss)){
+            return discuss.getId();
+        }
+        return 0L;
+    }
+
+    @Override
+    public Long addManagerDiscuss(AddManagerDiscussForm addDiscussForm) {
+        DiscussEntity discuss = new DiscussEntity();
+        BeanUtils.copyProperties(addDiscussForm, discuss);
+        discuss.setDiscussTop(1);
+        discuss.setPostCount(0);
+        discuss.setReadCount(0);
+        discuss.setCut(JSON.toJSONString(addDiscussForm.getCut()));
         discuss.setCreateTime(DateUtil.nowDateTime());
         if (this.save(discuss)){
             return discuss.getId();
