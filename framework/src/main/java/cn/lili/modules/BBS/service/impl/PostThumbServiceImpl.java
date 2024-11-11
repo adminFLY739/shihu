@@ -7,6 +7,7 @@ import cn.lili.modules.BBS.entity.*;
 import cn.lili.modules.BBS.mapper.PostThumbDao;
 import cn.lili.modules.BBS.mapper.TaskUserDao;
 import cn.lili.modules.BBS.param.AddPostThumbForm;
+import cn.lili.modules.BBS.param.ManagerAddPostThumbForm;
 import cn.lili.modules.BBS.service.EndorseMessageService;
 import cn.lili.modules.BBS.service.PostService;
 import cn.lili.modules.BBS.service.PostThumbService;
@@ -102,5 +103,30 @@ public class PostThumbServiceImpl extends ServiceImpl<PostThumbDao, PostThumbEnt
 
         // 每日任务监测
         taskUserService.addTaskUser(uid,"3",3L,"赞同 1 篇认可的内容");
+    }
+
+    @Override
+    public void ManagerAddPostThumb(ManagerAddPostThumbForm request) {
+        PostThumbEntity postThumbEntity = new PostThumbEntity();
+        postThumbEntity.setUid(request.getThumbUid());
+        postThumbEntity.setPostId(request.getId());
+        baseMapper.insert(postThumbEntity);
+
+        // 点赞数+1
+        PostEntity post = postService.getById(request.getId());
+        if (ObjectUtil.isNull(post)) {
+            throw new LinfengException("该帖子不存在或已删除");
+        }
+        post.setThumbCount(post.getThumbCount()+1);
+        postService.updateById(post);
+
+        // 消息通知
+        EndorseMessageEntity endorseMessageEntity = new EndorseMessageEntity();
+        endorseMessageEntity.setPostId(request.getId());
+        endorseMessageEntity.setUid(request.getThumbUid());
+        endorseMessageEntity.setIsRead(Boolean.FALSE);
+        endorseMessageEntity.setCreateTime(DateUtil.nowDateTime());
+        endorseMessageEntity.setReceiverUid(request.getUid());
+        endorseMessageService.save(endorseMessageEntity);
     }
 }

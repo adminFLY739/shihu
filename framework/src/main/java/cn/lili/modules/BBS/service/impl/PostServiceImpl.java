@@ -196,6 +196,23 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
     }
 
     @Override
+    public void ManagerAddPostCollection(ManagerAddCollectionForm request) {
+        PostCollectionEntity pc = new PostCollectionEntity();
+        pc.setPostId(request.getId());
+        pc.setUid(request.getThumbUid());
+        postCollectionService.save(pc);
+
+        // 消息通知
+        CollectMessageEntity collectMessageEntity = new CollectMessageEntity();
+        collectMessageEntity.setPostId(request.getId());
+        collectMessageEntity.setUid(request.getThumbUid());
+        collectMessageEntity.setIsRead(Boolean.FALSE);
+        collectMessageEntity.setCreateTime(DateUtil.nowDateTime());
+        collectMessageEntity.setReceiverUid(request.getUid());
+        collectMessageService.save(collectMessageEntity);
+    }
+
+    @Override
     public AppPageUtils myPost(Integer page, String uid) {
         QueryWrapper<PostEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(PostEntity::getUid, uid);

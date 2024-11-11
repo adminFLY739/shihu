@@ -14,6 +14,7 @@ package cn.lili.modules.BBS.service.impl;
 import cn.lili.modules.BBS.entity.PostCollectionEntity;
 import cn.lili.modules.BBS.mapper.PostCollectionDao;
 import cn.lili.modules.BBS.param.AddCollectionForm;
+import cn.lili.modules.BBS.param.ManagerAddCollectionForm;
 import cn.lili.modules.BBS.service.PostCollectionService;
 import cn.lili.modules.BBS.utils.PageUtils;
 import cn.lili.modules.BBS.utils.Query;

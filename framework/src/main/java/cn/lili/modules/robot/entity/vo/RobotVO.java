@@ -30,7 +30,7 @@ public class RobotVO implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "会员用户名")
-    @Sensitive(strategy = SensitiveStrategy.PHONE)
+//    @Sensitive(strategy = SensitiveStrategy.PHONE)
     private String username;
 
     @ApiModelProperty(value = "会员姓名")
@@ -54,7 +54,7 @@ public class RobotVO implements Serializable {
     private String region;
 
     @ApiModelProperty(value = "手机号码", required = true)
-    @Sensitive(strategy = SensitiveStrategy.PHONE)
+//    @Sensitive(strategy = SensitiveStrategy.PHONE)
     private String mobile;
 
     @ApiModelProperty(value = "积分数量")

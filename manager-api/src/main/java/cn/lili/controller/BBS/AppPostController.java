@@ -87,13 +87,8 @@ public class AppPostController {
      */
     @PostMapping("/addCollection")
     @ApiOperation("帖子收藏")
-    public R addCollection(@RequestBody AddCollectionForm request) {
-        AuthUser authUser = UserContext.getCurrentUser();
-        if (authUser == null) {
-            throw new ServiceException(ResultCode.USER_NOT_LOGIN);
-        }
-        postService.addCollection(request, authUser.getId());
-
+    public R addCollection(@RequestBody ManagerAddCollectionForm request) {
+        postService.ManagerAddPostCollection(request);
         return R.ok();
     }
 
@@ -116,13 +111,8 @@ public class AppPostController {
      */
     @PostMapping("/addPostThumb")
     @ApiOperation("帖子点赞")
-    public R addPostThumb(@RequestBody AddPostThumbForm request) {
-        AuthUser authUser = UserContext.getCurrentUser();
-        if (authUser == null) {
-            throw new ServiceException(ResultCode.USER_NOT_LOGIN);
-        }
-        postThumbService.addPostThumb(request, authUser.getId());
-
+    public R addPostThumb(@RequestBody ManagerAddPostThumbForm request) {
+        postThumbService.ManagerAddPostThumb(request);
         return R.ok();
     }
 

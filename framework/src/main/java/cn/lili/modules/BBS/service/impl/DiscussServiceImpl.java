@@ -20,11 +20,14 @@ import cn.lili.modules.BBS.utils.DateUtil;
 import cn.lili.modules.BBS.utils.JsonUtils;
 import cn.lili.modules.member.entity.dos.Member;
 import cn.lili.modules.member.service.MemberService;
+import cn.lili.modules.robot.entity.dos.Robot;
+import cn.lili.modules.robot.serviceImpl.RobotServiceImpl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +71,8 @@ public class DiscussServiceImpl extends ServiceImpl<DiscussDao, DiscussEntity> i
 
     @Resource
     private FollowDiscussDao followDiscussDao;
+    @Autowired
+    private RobotServiceImpl robotServiceImpl;
 
     @Override
     public AppPageUtils lastDiscuss(Integer currPage) {
@@ -85,6 +90,30 @@ public class DiscussServiceImpl extends ServiceImpl<DiscussDao, DiscussEntity> i
 
             //设置响应数据
             Member userInfo = memberService.getById(item.getUid());
+            if (userInfo == null) {
+                userInfo = new Member();
+                Robot robotInfo = robotServiceImpl.getById(response.getUid());
+                userInfo.setUsername(robotInfo.getUsername());
+                userInfo.setStudentId(robotInfo.getStudentId());
+                userInfo.setNickName(robotInfo.getNickName());
+                userInfo.setSex(robotInfo.getSex());
+                userInfo.setBirthday(robotInfo.getBirthday());
+                userInfo.setRegionId(robotInfo.getRegionId());
+                userInfo.setRegion(robotInfo.getRegion());
+                userInfo.setMobile(robotInfo.getMobile());
+                userInfo.setPoint(robotInfo.getPoint());
+                userInfo.setTotalPoint(robotInfo.getTotalPoint());
+                userInfo.setFace(robotInfo.getFace());
+                userInfo.setDisabled(robotInfo.getDisabled());
+                userInfo.setHaveStore(robotInfo.getHaveStore());
+                userInfo.setStoreId(robotInfo.getStoreId());
+                userInfo.setClientEnum(robotInfo.getClientEnum());
+                userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+                userInfo.setGradeId(robotInfo.getGradeId());
+                userInfo.setExperience(robotInfo.getExperience());
+                userInfo.setTenantIds(robotInfo.getTenantIds());
+                System.out.println("robotrobotrobot" + userInfo);
+            }
             response.setUserInfo(userInfo);
             response.setLevel(getUserLevel(userInfo.getTotalPoint()));
             response.setPostCount(postService.getPostCountByDiscussId(item.getId().intValue()));
@@ -302,6 +331,30 @@ public class DiscussServiceImpl extends ServiceImpl<DiscussDao, DiscussEntity> i
 
             //设置响应数据
             Member userInfo = memberService.getById(item.getUid());
+            if (userInfo == null) {
+                userInfo = new Member();
+                Robot robotInfo = robotServiceImpl.getById(response.getUid());
+                userInfo.setUsername(robotInfo.getUsername());
+                userInfo.setStudentId(robotInfo.getStudentId());
+                userInfo.setNickName(robotInfo.getNickName());
+                userInfo.setSex(robotInfo.getSex());
+                userInfo.setBirthday(robotInfo.getBirthday());
+                userInfo.setRegionId(robotInfo.getRegionId());
+                userInfo.setRegion(robotInfo.getRegion());
+                userInfo.setMobile(robotInfo.getMobile());
+                userInfo.setPoint(robotInfo.getPoint());
+                userInfo.setTotalPoint(robotInfo.getTotalPoint());
+                userInfo.setFace(robotInfo.getFace());
+                userInfo.setDisabled(robotInfo.getDisabled());
+                userInfo.setHaveStore(robotInfo.getHaveStore());
+                userInfo.setStoreId(robotInfo.getStoreId());
+                userInfo.setClientEnum(robotInfo.getClientEnum());
+                userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+                userInfo.setGradeId(robotInfo.getGradeId());
+                userInfo.setExperience(robotInfo.getExperience());
+                userInfo.setTenantIds(robotInfo.getTenantIds());
+                System.out.println("robotrobotrobot" + userInfo);
+            }
             response.setUserInfo(userInfo);
             response.setLevel(getUserLevel(userInfo.getTotalPoint()));
             response.setPostCount(postService.getPostCountByDiscussId(item.getId().intValue()));

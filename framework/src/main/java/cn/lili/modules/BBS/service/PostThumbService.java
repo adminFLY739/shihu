@@ -3,6 +3,7 @@ package cn.lili.modules.BBS.service;
 
 import cn.lili.modules.BBS.entity.PostThumbEntity;
 import cn.lili.modules.BBS.param.AddPostThumbForm;
+import cn.lili.modules.BBS.param.ManagerAddPostThumbForm;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -18,4 +19,6 @@ public interface PostThumbService extends IService<PostThumbEntity> {
     void cancelPostThumb(AddPostThumbForm request, String uid);
 
     void addPostThumb(AddPostThumbForm request, String uid);
+
+    void ManagerAddPostThumb(ManagerAddPostThumbForm request);
 }

@@ -45,6 +45,8 @@ public interface PostService extends IService<PostEntity> {
 
     void addCollection(AddCollectionForm request, String userId);
 
+    void ManagerAddPostCollection(ManagerAddCollectionForm request);
+
     AppPageUtils myPost(Integer page, String uid);
 
     AppPageUtils myCollectPost(Integer page,String uid);
