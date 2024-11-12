@@ -28,6 +28,8 @@ import cn.lili.modules.BBS.utils.PageUtils;
 import cn.lili.modules.BBS.utils.Query;
 import cn.lili.modules.member.entity.dos.Member;
 import cn.lili.modules.member.service.MemberService;
+import cn.lili.modules.robot.entity.dos.Robot;
+import cn.lili.modules.robot.serviceImpl.RobotServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -54,6 +56,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, CommentEntity> i
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private RobotServiceImpl robotServiceImpl;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -153,6 +157,30 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, CommentEntity> i
                 BeanUtils.copyProperties(l, response);
 
                 Member userInfo = memberService.getById(response.getUid());
+                if (userInfo == null) {
+                    userInfo = new Member();
+                    Robot robotInfo = robotServiceImpl.getById(response.getUid());
+                    userInfo.setUsername(robotInfo.getUsername());
+                    userInfo.setStudentId(robotInfo.getStudentId());
+                    userInfo.setNickName(robotInfo.getNickName());
+                    userInfo.setSex(robotInfo.getSex());
+                    userInfo.setBirthday(robotInfo.getBirthday());
+                    userInfo.setRegionId(robotInfo.getRegionId());
+                    userInfo.setRegion(robotInfo.getRegion());
+                    userInfo.setMobile(robotInfo.getMobile());
+                    userInfo.setPoint(robotInfo.getPoint());
+                    userInfo.setTotalPoint(robotInfo.getTotalPoint());
+                    userInfo.setFace(robotInfo.getFace());
+                    userInfo.setDisabled(robotInfo.getDisabled());
+                    userInfo.setHaveStore(robotInfo.getHaveStore());
+                    userInfo.setStoreId(robotInfo.getStoreId());
+                    userInfo.setClientEnum(robotInfo.getClientEnum());
+                    userInfo.setLastLoginDate(robotInfo.getLastLoginDate());
+                    userInfo.setGradeId(robotInfo.getGradeId());
+                    userInfo.setExperience(robotInfo.getExperience());
+                    userInfo.setTenantIds(robotInfo.getTenantIds());
+                    System.out.println("robotrobotrobot" + userInfo);
+                }
                 // 设置评论人信息
                 response.setUserInfo(userInfo);
                 // 评论的点赞数

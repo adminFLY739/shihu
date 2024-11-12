@@ -203,15 +203,11 @@ public class AppPostController {
     }
 
 
-    @PostMapping("/addComment")
+    @PostMapping("/addManagerComment")
     @ApiOperation("添加评论")
-    public R addComment(@RequestBody AddCommentForm request) {
-        AuthUser authUser = UserContext.getCurrentUser();
-        if (authUser == null) {
-            throw new ServiceException(ResultCode.USER_NOT_LOGIN);
-        }
+    public R addComment(@RequestBody AddManagerCommentForm request) {
         ValidatorUtils.validateEntity(request);
-        postService.addComment(request, authUser.getId());
+        postService.addManagerComment(request);
         return R.ok();
     }
 

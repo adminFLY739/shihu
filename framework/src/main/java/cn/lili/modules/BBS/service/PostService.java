@@ -54,6 +54,7 @@ public interface PostService extends IService<PostEntity> {
     PostDetailResponse detail(Integer id);
 
     void addComment(AddCommentForm request, String uid);
+    void addManagerComment(AddManagerCommentForm request);
 
 
     void delComment(DelCommentForm request, String uid);

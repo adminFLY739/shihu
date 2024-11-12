@@ -357,6 +357,25 @@ public class PostServiceImpl extends ServiceImpl<PostDao, PostEntity> implements
             commentMessageEntity.setCommentId(commentEntity.getId());
             commentMessageService.save(commentMessageEntity);
         }
+    }
+    @Override
+    public void addManagerComment(AddManagerCommentForm request) {
+        CommentEntity commentEntity = new CommentEntity();
+        BeanUtils.copyProperties(request, commentEntity);
+
+        commentEntity.setCreateTime(DateUtil.nowDateTime());
+
+        commentService.save(commentEntity);
+        System.out.println("commentEntity-commentEntity" + commentEntity);
+
+        // 创建评论消息(后续判断评论的是否为自己的帖子，如果是则不创建消息)
+        CommentMessageEntity commentMessageEntity = new CommentMessageEntity();
+        commentMessageEntity.setIsRead(Boolean.FALSE);
+        if (request.getReceiverUid() != null) {
+            commentMessageEntity.setReceiverUid(request.getReceiverUid());
+            commentMessageEntity.setCommentId(commentEntity.getId());
+            commentMessageService.save(commentMessageEntity);
+        }
 
 
 
